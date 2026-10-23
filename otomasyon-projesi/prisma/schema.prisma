@@ -1,0 +1,236 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleName {
+  ADAY
+  YONETICI
+}
+
+enum WorkMode {
+  OFISTE
+  UZAKTAN
+  HIBRIT
+}
+
+enum JobStatus {
+  TASLAK
+  AKTIF
+  KAPALI
+}
+
+enum ApplicationStatus {
+  BASVURULDU
+  INCELEMEDE
+  MULAKAT
+  KABUL
+  RED
+}
+
+enum InterviewStatus {
+  PLANLANDI
+  TAMAMLANDI
+  IPTAL
+}
+
+enum NotificationType {
+  SISTEM
+  BASVURU
+  MULAKAT
+  AI_ANALIZ
+}
+
+model Role {
+  id        String   @id @default(uuid())
+  name      RoleName @unique
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("roles")
+}
+
+model User {
+  id           String         @id @default(uuid())
+  email        String         @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  phone        String?
+  isActive     Boolean        @default(true)
+  roleId       String
+  role         Role           @relation(fields: [roleId], references: [id])
+  candidate    Candidate?
+  jobs         Job[]          @relation("JobCreatedBy")
+  interviews   Interview[]    @relation("InterviewCreatedBy")
+  notifications Notification[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([roleId])
+  @@index([email])
+  @@map("users")
+}
+
+model Candidate {
+  id             String          @id @default(uuid())
+  userId         String          @unique
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title          String?
+  summary        String?
+  photoUrl       String?
+  cvUrl          String?
+  education      Json?
+  experiences    Json?
+  languages      Json?
+  aiAnalysis     Json?
+  suitability    Int             @default(0)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  skills         CandidateSkill[]
+  certificates   Certificate[]
+  projects       Project[]
+  applications   Application[]
+
+  @@index([suitability])
+  @@map("candidates")
+}
+
+model Skill {
+  id         String           @id @default(uuid())
+  name       String           @unique
+  category   String?
+  candidates CandidateSkill[]
+  jobs       Job[]            @relation("JobSkills")
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@index([name])
+  @@map("skills")
+}
+
+model CandidateSkill {
+  candidateId String
+  skillId     String
+  level       Int     @default(1)
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  skill       Skill     @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([candidateId, skillId])
+  @@index([skillId])
+  @@map("candidate_skills")
+}
+
+model Certificate {
+  id          String    @id @default(uuid())
+  candidateId String
+  name        String
+  issuer      String?
+  issuedAt    DateTime?
+  fileUrl     String?
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([candidateId])
+  @@map("certificates")
+}
+
+model Project {
+  id          String    @id @default(uuid())
+  candidateId String
+  name        String
+  description String?
+  technologies String[]
+  url         String?
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([candidateId])
+  @@map("projects")
+}
+
+model Job {
+  id                  String         @id @default(uuid())
+  positionName        String
+  department          String
+  description         String
+  educationRequirement String?
+  experienceRequirement String?
+  workMode            WorkMode
+  deadline            DateTime
+  status              JobStatus      @default(AKTIF)
+  createdById         String
+  createdBy           User           @relation("JobCreatedBy", fields: [createdById], references: [id])
+  requiredSkills      Skill[]        @relation("JobSkills")
+  applications        Application[]
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  @@index([status, deadline])
+  @@index([department])
+  @@map("jobs")
+}
+
+model Application {
+  id             String            @id @default(uuid())
+  candidateId    String
+  jobId          String
+  status         ApplicationStatus @default(BASVURULDU)
+  scoreEducation Int               @default(0)
+  scoreSkills    Int               @default(0)
+  scoreCertificates Int            @default(0)
+  scoreProjects  Int               @default(0)
+  scoreExperience Int              @default(0)
+  totalScore     Int               @default(0)
+  matchingResult Json?
+  candidate      Candidate         @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job            Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  interviews     Interview[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@unique([candidateId, jobId])
+  @@index([status])
+  @@index([totalScore])
+  @@map("applications")
+}
+
+model Interview {
+  id            String          @id @default(uuid())
+  applicationId String
+  scheduledAt   DateTime
+  location      String?
+  meetingUrl    String?
+  notes         String?
+  status        InterviewStatus @default(PLANLANDI)
+  createdById   String
+  application   Application     @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  createdBy     User            @relation("InterviewCreatedBy", fields: [createdById], references: [id])
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@index([applicationId])
+  @@index([scheduledAt])
+  @@map("interviews")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      NotificationType @default(SISTEM)
+  readAt    DateTime?
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+
+  @@index([userId, readAt])
+  @@map("notifications")
+}

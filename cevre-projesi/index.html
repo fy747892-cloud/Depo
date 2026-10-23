@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoBildirim - Erzurum</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#27ae60">
+    <meta name="theme-color" content="#27ae60">
+    <link rel="apple-touch-icon" href="İkonlar/logo.jpeg">
+    <link rel="icon" type="image/jpeg" href="İkonlar/logo.jpeg">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="home-page" class="page-container">
+        <section class="hero-section">
+            <div class="hero-content">
+                <img src="İkonlar/logo.jpeg" class="hero-logo" alt="Logo">
+                <h1>Erzurum İçin El Ele</h1>
+                <p>Çevrendeki kirlilikleri bildir, belediye hizmetlerine rehberlik et. Daha temiz bir Erzurum senin elinde.</p>
+                <div class="hero-buttons">
+                    <button onclick="sayfaDegistir('map')" class="btn-modern btn-primary">Hemen Başla</button>
+                    <button onclick="scrollToElement('info-section')" class="btn-modern btn-outline">Nasıl Çalışır?</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="info-section">
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-card-img-wrapper">
+                    <img src="Ana_Sayfa/Ana_Sayfa1.png" class="info-card-img" alt="Bildir">
+                </div>
+                <h3>Bildir</h3>
+                <p>Gördüğün kirliliği veya ihtiyaç duyulan hizmet noktasını harita üzerinde işaretle.</p>
+            </div>
+        
+            <div class="info-card">
+                <div class="info-card-img-wrapper">
+                    <img src="Ana_Sayfa/Ana_Sayfa2.png" class="info-card-img" alt="Onayla">
+                </div>
+                <h3>Onayla</h3>
+                <p>Diğer kullanıcıların bildirimlerini teyit et, doğruluğunu artır.</p>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-img-wrapper">
+                    <img src="Ana_Sayfa/Ana_Sayfa3.png" class="info-card-img" alt="Koru">
+                </div>
+                <h3>Koru</h3>
+                <p>5 onaya ulaşan bildirimlerle Erzurum'un doğasını hep birlikte koruyalım.</p>
+            </div>
+            </div>
+
+            <div class="info-grid-bottom">
+                <div class="info-card pwa-card">
+                <h3>Uygulama Olarak Yükle</h3>
+                <p>Tarayıcı menüsünden "Ana Ekrana Ekle" diyerek EcoBildirim'i telefonuna bir uygulama gibi kurabilirsin.Android cihazlarda sağ üstteki üç noktadan tarayıcı menüsüne erişebilirsiniz.İphone ve iPad'de,tarayıcınız daki "Paylaş" butonu üzerinden "Ana Ekrana Ekle" seçeneğini kullanabilirsiniz.</p>
+            </div>
+        </section>
+        <footer class="home-footer">
+        <div class="footer-container">
+            <div class="footer-section brand-info">
+                <img src="İkonlar/logo.jpeg" alt="EcoBildirim Logo" class="footer-logo">
+                <h3>EcoBildirim Erzurum</h3>
+                <p>Daha temiz bir Erzurum için el ele. Bildirimlerinle şehrine değer kat.</p>
+            </div>
+
+                <div class="footer-section contact-info">
+                    <h4>İletişime Geçin</h4>
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <a href="mailto:ecobildirimapp@gmail.com">ecobildirimapp@gmail.com</a>
+                    </div>
+                <p class="location-text">📍 Erzurum, Türkiye</p>
+                <div class="contact-item instagram-row">
+                    <a href="https://www.instagram.com/ecobildirimapp?igsh=dnhvM3BubGh6dm8w" target="_blank" class="instagram-link">
+                    <svg viewBox="0 0 24 24" class="instagram-icon"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    <span>Instagram'da Takip Et</span>
+                    </a>
+                </div>
+            </div>
+
+                <div class="footer-section legal-links">
+                    <h4>Hukuki Metinler</h4>
+                    <p onclick="legalModalAc('about')">Hakkımızda</p>
+                    <p onclick="legalModalAc('terms')">Kullanım Şartları</p>
+                    <p onclick="legalModalAc('privacy')">Gizlilik Politikası</p>
+                </div>
+            </div>
+    
+            <div class="footer-bottom">
+                <p>&copy; 2026 EcoBildirim Erzurum. Tüm Hakları Saklıdır.</p>
+                <p class="footer-slogan">"Doğayı koru, geleceğe nefes ol."</p>
+            </div>
+        </footer>
+    </div>
+
+
+    <div id="side-menu" class="side-nav">
+        <a href="javascript:void(0)" class="closebtn" onclick="menuKapat()">&times;</a>
+        <div class="menu-content">
+            <img src="İkonlar/logo.jpeg" class="menu-logo-img" alt="EcoBildirim Logo">
+            <h3 class="brand-green">EcoBildirim</h3>
+            <hr class="menu-divider">
+            <button onclick="menuKapat(); sayfaDegistir('home')" class="side-btn side-btn-gray">Ana Sayfa</button>
+            <button onclick="menuKapat(); girisPaneliAc('login')" class="side-btn side-btn-blue guest-only">Giriş Yap</button>
+            <button onclick="menuKapat(); girisPaneliAc('register')" class="side-btn side-btn-green guest-only">Kayıt Ol</button>
+            <button onclick="hesabimAc()" class="side-btn side-btn-blue auth-only">Hesabım</button>
+            <button onclick="destekFormuAc()" class="side-btn side-btn-green auth-only">Bize Ulaşın</button>
+            <button onclick="cikisYap()" class="side-btn side-btn-red auth-only">Çıkış Yap</button>
+        </div>
+    </div>
+    <!-- Etik Kurallar ve Kullanım Şartları Modalı -->
+    <div id="terms-modal" class="modal-overlay hidden-element">
+        <div class="cevre-form modal-content terms-box">
+            <h3>🌱 Kullanım Şartları ve Etik Kurallar</h3>
+            <div class="terms-text">
+                <p>EcoBildirim Erzurum topluluğuna hoş geldiniz! Haritayı kullanmadan önce lütfen aşağıdaki kuralları onaylayın:</p>
+                <ul>
+                    <li><b>Doğru Bildirim:</b> Sadece bizzat gördüğünüz gerçek kirlilik veya hizmet noktalarını işaretleyeceğinizi,</li>
+                    <li><b>Etik Kullanım:</b> Yanıltıcı, şaka amaçlı veya asılsız bildirimlerde bulunmayacağınızı,</li>
+                    <li><b>Sorumluluk:</b> Gönderdiğiniz görsellerin ve bilgilerin doğruluğundan sorumlu olduğunuzu kabul etmiş sayılırsınız.</li>
+                </ul>
+                <p><small>Asılsız bildirim yapan hesaplar sistem tarafından kalıcı olarak uzaklaştırılabilir.</small></p>
+            </div>
+        <button onclick="etikKurallariOnayla()" class="btn-modern btn-primary">Okudum, Kabul Ediyorum</button>
+        </div>
+    </div>
+    <header id="main-header" class="hidden-element">
+        <div class="menu-icon" onclick="menuAc()">&#9776;</div>
+            <div id="filter-bar" class="filter-container">
+            <!-- Üst Satır -->
+                <div class="filter-row main-filters">
+                <button class="filter-btn active" onclick="filtrele('hepsi', this)">🌟 Hepsi</button>
+                <button class="filter-btn" onclick="filtrele('kirlilik', this)">🚨 Kirlilikler</button>
+                <button class="filter-btn" onclick="filtrele('hizmet', this)">♻️ Hizmetler</button>
+            </div>
+            <!-- Alt Satır (Daha Küçük/Kompakt) -->
+            <div class="filter-row sub-filters">
+                <button class="filter-btn sub-btn" onclick="filtrele('diger', this)">🔍 Diğer Sorun</button>
+                <button class="filter-btn sub-btn" onclick="filtrele('istenilenhizmet', this)">💡 İstenilen Hizmet</button>
+            </div>
+        </div>
+        <img src="İkonlar/logo.jpeg" class="header-logo-mini" alt="Logo">
+    </header>
+    <div id="auth-container" class="auth-wrapper hidden-element">
+        <div id="login-form" class="cevre-form">
+            <div class="auth-logo-box"><img src="İkonlar/logo.jpeg"></div>
+            <h2 class="auth-title-green">🌱 EcoBildirim Giriş</h2>
+            <input type="email" id="login-email" placeholder="E-posta">
+            <input type="password" id="login-password" placeholder="Şifre">
+            <button onclick="girisYap()" class="btn-modern btn-primary">Giriş Yap</button>
+            <button onclick="googleIleGiris()" class="btn-modern btn-google">Google ile Giriş Yap</button>
+            <button onclick="dogrulamaMailiGonder()" class="btn-modern btn-orange">Doğrulama Maili Gönder</button>
+            <p class="auth-footer-text"><a href="javascript:void(0)" onclick="formDegistir('reset')">Şifremi Unuttum</a></p>
+            <p class="auth-footer-text">Hesabın yok mu? <a href="javascript:void(0)" onclick="formDegistir('register')" class="bold-link">Hemen Kayıt Ol</a></p>
+        </div>
+
+        <div id="register-form" class="cevre-form hidden-element">
+            <div class="auth-logo-box"><img src="İkonlar/logo.jpeg"></div>
+            <h2 class="auth-title-blue">📝 Yeni Hesap</h2>
+            <input type="email" id="reg-email" placeholder="E-posta">
+            <input type="password" id="reg-password" placeholder="Şifre (Min 6)">
+            <button onclick="kayitOl()" class="btn-modern btn-blue">Kayıt Ol</button>
+            <button onclick="googleIleGiris()" class="btn-modern btn-google">Google ile Devam Et</button>
+            <p class="auth-footer-text"><a href="javascript:void(0)" onclick="formDegistir('login')">← Geri Dön</a></p>
+        </div>
+
+        <div id="reset-form" class="cevre-form hidden-element">
+            <div class="auth-logo-box"><img src="İkonlar/logo.jpeg"></div>
+            <h2 class="auth-title-orange">🔄 Şifre Sıfırla</h2>
+            <input type="email" id="reset-email" placeholder="E-posta">
+            <button onclick="sifreSifirla()" class="btn-modern btn-orange">Mail Gönder</button>
+            <p class="auth-footer-text"><a href="javascript:void(0)" onclick="formDegistir('login')">Vazgeç</a></p>
+        </div>
+    </div>
+
+    <div id="map" class="hidden-element"></div>
+    <button id="locate-btn" onclick="konumumaGit()" title="Konumuma Git">🎯</button>
+
+    <div id="mobile-bottom-sheet" class="bottom-sheet">
+        <div class="sheet-header"><div class="handle"></div></div>
+        <div id="sheet-content"></div>
+    </div>
+
+    <div id="destek-modal" class="modal-overlay hidden-element">
+        <div class="cevre-form modal-content">
+            <h3>✉️ Destek Mesajı</h3>
+            <textarea id="destek-mesaj" rows="4" placeholder="Sorununuzu yazın..."></textarea>
+            <button onclick="destekGonder()" class="btn-modern btn-primary">Gönder</button>
+            <button onclick="destekKapat()" class="btn-modern btn-danger">Kapat</button>
+        </div>
+    </div>
+
+    <div id="login-required-modal" class="modal-overlay hidden-element">
+        <div class="cevre-form modal-content">
+            <h3>Giriş Gerekli</h3>
+            <p class="modal-info-text">Bildirim bırakmak veya bildirimlerle etkileşime geçmek için lütfen giriş yapın.</p>
+            <button onclick="girisGerekliKapat(); girisPaneliAc('login')" class="btn-modern btn-primary">Giriş Yap</button>
+            <button onclick="girisGerekliKapat(); girisPaneliAc('register')" class="btn-modern btn-blue">Kayıt Ol</button>
+            <button onclick="girisGerekliKapat()" class="btn-modern btn-danger">Vazgeç</button>
+        </div>
+    </div>
+
+    <div id="account-modal" class="modal-overlay hidden-element">
+        <div class="cevre-form modal-content account-box">
+            <h3>Hesabım</h3>
+            <div class="account-avatar">E</div>
+            <p id="account-email" class="account-email">-</p>
+            <div class="account-level-card">
+                <span id="account-level-name" class="level-name">Çevreci Başlangıç</span>
+                <strong id="account-points">0 puan</strong>
+                <div class="progress-track">
+                    <div id="account-progress-fill" class="progress-fill"></div>
+                </div>
+                <p id="account-next-level" class="next-level-text">Bir sonraki seviyeye 50 puan kaldı.</p>
+            </div>
+            <div class="trust-card">
+                <span>Güvenilirlik Skoru</span>
+                <strong id="account-trust-score">20/100</strong>
+                <p id="account-trust-name">Yeni Katılımcı</p>
+            </div>
+            <div class="account-stats">
+                <div>
+                    <strong id="account-report-count">0</strong>
+                    <span>Bildirim</span>
+                </div>
+                <div>
+                    <strong id="account-action-count">0</strong>
+                    <span>Etkileşim</span>
+                </div>
+            </div>
+            <button onclick="hesabimKapat()" class="btn-modern btn-primary">Kapat</button>
+        </div>
+    </div>
+
+    <div id="legal-modal" class="modal-overlay hidden-element">
+        <div class="cevre-form modal-content legal-box">
+            <h3 id="legal-modal-title">Bilgilendirme</h3>
+            <div id="legal-modal-body" class="legal-text"></div>
+            <button onclick="legalModalKapat()" class="btn-modern btn-primary">Kapat</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

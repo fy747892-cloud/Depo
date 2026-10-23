@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function girisYapmis() {
+      return request.auth != null;
+    }
+
+    function emailDogrulanmis() {
+      return girisYapmis() && request.auth.token.email_verified == true;
+    }
+
+    match /bildirimler/{bildirimId} {
+      allow read: if true;
+      allow create: if emailDogrulanmis()
+        && request.resource.data.ekleyen == request.auth.token.email
+        && request.resource.data.onaySayisi == 0
+        && request.resource.data.onaylayanlar is list;
+      allow update: if emailDogrulanmis()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['onaySayisi', 'onaylayanlar'])
+        && request.resource.data.onaySayisi == resource.data.onaySayisi + 1
+        && request.auth.token.email in request.resource.data.onaylayanlar
+        && !(request.auth.token.email in resource.data.onaylayanlar);
+      allow delete: if emailDogrulanmis()
+        && resource.data.ekleyen == request.auth.token.email;
+    }
+
+    match /destek_mesajlari/{mesajId} {
+      allow create: if emailDogrulanmis()
+        && request.resource.data.ekleyen == request.auth.token.email;
+      allow read, update, delete: if false;
+    }
+
+    match /kullanicilar/{userId} {
+      allow read: if emailDogrulanmis() && request.auth.uid == userId;
+      allow create, update: if emailDogrulanmis()
+        && request.auth.uid == userId
+        && request.resource.data.email == request.auth.token.email;
+      allow delete: if false;
+    }
+
+    match /bolge_temizlik_puanlari/{bolgeId} {
+      allow read: if true;
+      allow create, update: if emailDogrulanmis()
+        && request.resource.data.bolgeId == bolgeId;
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

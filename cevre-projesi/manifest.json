@@ -1,0 +1,21 @@
+{
+  "name": "EcoBildirim Erzurum",
+  "short_name": "EcoBildirim",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#27ae60",
+  "description": "Erzurum çevresini korumak için bildirim ve takip uygulaması.",
+  "icons": [
+    {
+      "src": "İkonlar/logo.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "İkonlar/logo.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
